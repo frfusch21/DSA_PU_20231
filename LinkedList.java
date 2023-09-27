@@ -1,11 +1,11 @@
 import java.util.Scanner;
-class ListNode {
-    int value;
+class ListNode { //Declaration of Linked List
+    int value; //We can change this to String for to-do list
 
-    ListNode next;
-    ListNode prev; // For doubly linked list
+    ListNode next; //Pointer Next
+    ListNode prev; // Pointer Previous, For doubly linked list
 
-    ListNode(int value) {
+    ListNode(int value) { //Waiting for user input to fill the list
             this.value = value;
             this.next = null;
             this.prev = null;
@@ -17,38 +17,40 @@ class SinglyLinkedList {
 
     SinglyLinkedList() {
         this.head = null;
+    } //Set head pointer to null
+
+    void insertAtFront(int value) { //Inserting value at the front of the linked list
+        ListNode newNode = new ListNode(value);
+        newNode.next = head; //Updating Next pointer of new node to current head.
+        head = newNode; //Updating head to be pointing at the new node.
     }
 
-    void insertAtFront(int value) {
+    void insertAtEnd(int value) { //Inserting value at the end of the linked list
         ListNode newNode = new ListNode(value);
-        newNode.next = head;
-        head = newNode;
-    }
-
-    void insertAtEnd(int value) {
-        ListNode newNode = new ListNode(value);
-        if (head == null) {
+        if (head == null) { //List is empty and add newNode as the head.
             head = newNode;
             return;
         }
         ListNode current = head;
-        while (current.next != null) {
-            current = current.next;
+        while (current.next != null) { //To check if the last node or tail (The tail pointer is null)
+            current = current.next; // as long as the pointer is not null, then keep traversing
         }
-        current.next = newNode;
+        current.next = newNode; //This means last pointer is set to point to newNode
     }
 
+    //Create function that can insert at random (Middle)
+
     void deleteNode(int value) {
-        if (head == null) {
+        if (head == null) { //Check if list is empty, then return nothing or error
             return;
         }
-        if (head.value == value) {
+        if (head.value == value) { //if you delete the first node then head will be the next node
             head = head.next;
             return;
         }
         ListNode current = head;
-        while (current.next != null) {
-            if (current.next.value == value) {
+        while (current.next != null) { //To check if last node or tail
+            if (current.next.value == value) { //If it is not tail then keep traversing
                 current.next = current.next.next;
                 return;
             }
@@ -58,11 +60,11 @@ class SinglyLinkedList {
 
     void display() {
         ListNode current = head;
-        while (current != null) {
-            System.out.print(current.value + " -> ");
+        while (current != null) { //If this is not tail keep traversing and display the values
+            System.out.print(current.value + " -> "); //Use 1-Directional arrow for singly
             current = current.next;
         }
-        System.out.println("null");
+        System.out.println("null"); //If list empty returns null
     }
 }
 
@@ -71,31 +73,33 @@ class DoublyLinkedList {
 
     DoublyLinkedList() {
         this.head = null;
-    }
+    } //If linked list is empty set head pointer to null
 
     void insertAtFront(int value) {
         ListNode newNode = new ListNode(value);
-        newNode.next = head;
-        newNode.prev = null;
-        if (head != null) {
-            head.prev = newNode;
+        newNode.next = head; //Doubly linked list requires 2 pointers
+        newNode.prev = null; //The head previous pointer is null
+        if (head != null) { //Check if head pointer is not null (empty)
+            head.prev = newNode; //Update head previous pointer to become newNode
         }
-        head = newNode;
+        head = newNode; //Head is the newNode
     }
 
-    void insertAtEnd(int value) {
+    void insertAtEnd(int value) { //Insert values at the end
         ListNode newNode = new ListNode(value);
-        if (head == null) {
+        if (head == null) {  //Check if head is empty (list is empty) then head becomes newNode
             head = newNode;
             return;
         }
         ListNode current = head;
-        while (current.next != null) {
-            current = current.next;
+        while (current.next != null) { //As long as next pointer is not null (not tail)
+            current = current.next; //Keep traversing
         }
-        current.next = newNode;
-        newNode.prev = current;
+        current.next = newNode; //Set the next pointer of current to newNode
+        newNode.prev = current; //Set the newNode previous pointer to current
     }
+
+    //Create function to insert in the middle of the doubly linked list
 
     void deleteNode(int value) {
         if (head == null) {
@@ -103,7 +107,7 @@ class DoublyLinkedList {
         }
         if (head.value == value) {
             head = head.next;
-            head.prev = null;
+            head.prev = null; //Change the previous pointer as well
             return;
         }
         ListNode current = head;
@@ -122,7 +126,7 @@ class DoublyLinkedList {
     void display() {
         ListNode current = head;
         while (current != null) {
-            System.out.print(current.value + " <-> ");
+            System.out.print(current.value + " <-> "); //Use 2-Directional arrow for doubly linked list
             current = current.next;
         }
         System.out.println("null");
@@ -145,11 +149,11 @@ class CircularLinkedList {
         }
         newNode.next = head;
         ListNode current = head;
-        while (current.next != head) {
-            current = current.next;
+        while (current.next != head) { //Because there is no Null pointer, it refers back to head
+            current = current.next; //As long as it isn't head, keep traversing.
         }
         current.next = newNode;
-        head = newNode;
+        head = newNode; //Because it inserts to front, the newNode will automatically become head.
     }
 
     void insertAtEnd(int value) {
@@ -224,7 +228,7 @@ public class LinkedList {
 
         int choice = scanner.nextInt();
 
-        switch (choice) {
+        switch (choice) { //Use switch case to use the proper linked list
             case 1:
                 singlyList = new SinglyLinkedList();
                 break;
@@ -255,7 +259,7 @@ public class LinkedList {
                     System.out.print("Enter the node to add: ");
                     int taskToAdd = scanner.nextInt();
                     if (choice == 1) {
-                        singlyList.insertAtFront(taskToAdd);
+                        singlyList.insertAtEnd(taskToAdd);
                     } else if (choice == 2) {
                         doublyList.insertAtFront(taskToAdd);
                     } else if (choice == 3) {
