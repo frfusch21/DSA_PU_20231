@@ -1,7 +1,7 @@
 public class LinkedListQueue {
     private static class Node {
         int data;
-        Node next;
+        Node next; //Next Node for each data
 
         Node(int data) {
             this.data = data;
@@ -9,65 +9,64 @@ public class LinkedListQueue {
         }
     }
 
-    private Node front;
-    private Node rear;
+    private Node front; //Declare pointer front
+    private Node rear; //Declare pointer Rear
 
     public LinkedListQueue() {
-        this.front = this.rear = null;
+        this.front = this.rear = null; //Declare empty queue
     }
 
     public boolean isEmpty() {
-        return front == null;
+        return front == null; //Check if queue is empty
     }
 
+    //Insert from the end
     public void enQueue(int item) {
-        Node newNode = new Node(item);
-        if (isEmpty()) {
+        Node newNode = new Node(item);  //Declare the newNode
+        if (isEmpty()) { //If it's empty queue then newNode become front and rear
             front = rear = newNode;
         } else {
-            rear.next = newNode;
+            rear.next = newNode; //insert at the end (rear)
             rear = newNode;
         }
     }
 
+    //Delete from the beginning
     public Integer deQueue() {
         if (isEmpty()) {
             System.out.println("Queue is empty. Cannot dequeue.");
             return null;
         }
-        int data = front.data;
-        front = front.next;
-        if (front == null) {
+        int data = front.data; //Get the data from the front of the queue
+        front = front.next; //Change pointer of the front to the next node
+        if (front == null) { //Check if front is null then rear also null return empty queue
             rear = null;
         }
         return data;
     }
 
     public int getSize() {
-        int count = 0;
-        Node current = front;
-        while (current != null) {
-            count++;
-            current = current.next;
+        int count = 0; //using count to check how much node available
+        Node current = front; //Assign front of the node to current
+        while (current != null) { //Loop if current is not null (Not empty)
+            count++; //Increment Count until the end of the list
+            current = current.next; //Traverse to the next node until the end
         }
-        return count;
+        return count; //Return how many are the nodes on the list
     }
 
     public static void main(String[] args) {
         LinkedListQueue queue = new LinkedListQueue();
-
         // Test the queue functionality
         System.out.println("Is Queue Empty? : " + queue.isEmpty());
         queue.enQueue(1);
         queue.enQueue(2);
         queue.enQueue(3);
         System.out.println("Queue Size : " + queue.getSize());
-
         System.out.println("Dequeue element : " + queue.deQueue());
-
         System.out.println("Is Queue Empty? : " + queue.isEmpty());
         System.out.println("Queue Size : " + queue.getSize());
-
+        queue.deQueue();
         queue.deQueue();
         queue.deQueue();
     }

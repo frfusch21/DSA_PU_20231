@@ -31,7 +31,7 @@ public class DynamicQueue {
     public Integer deQueue() {
         if (isEmpty()) {
             System.out.println("Queue is empty. Cannot dequeue.");
-            return -1; // Return a sentinel value indicating an error
+            return -1; // Return a value indicating an error
         }
         int item = queue.get(front); // Fetch the item from the front of the queue
         if (front == rear) {
@@ -55,19 +55,21 @@ public class DynamicQueue {
 
     public static void main(String[] args) {
         DynamicQueue queue = new DynamicQueue();
-
         // Test the queue functionality
         System.out.println("Is Queue Empty? : " + queue.isEmpty());
         queue.enQueue(1);
         queue.enQueue(2);
         queue.enQueue(3);
+        queue.enQueue(4);
+        queue.enQueue(5);
+        queue.enQueue(6);
         System.out.println("Queue Size : " + queue.getSize());
         queue.display();
-
         System.out.println("Dequeue element : " + queue.deQueue());
         queue.display();
-
         queue.deQueue();
+        queue.display();
         queue.deQueue(); // trying to dequeue from an empty queue to show error message
+        queue.deQueue();
     }
 }
