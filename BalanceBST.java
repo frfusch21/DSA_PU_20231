@@ -1,27 +1,30 @@
 class AVLNode {
+    //Construct a node, add height as new consideration
     int value, height;
     AVLNode left, right;
 
     AVLNode(int d) {
         value = d;
-        height = 1;
+        height = 1; //Set height as 1
     }
 }
 
 class AVLTree {
-    AVLNode root;
+    AVLNode root; //Construct AVL Tree root
 
+    //Find height of the Tree
     int height(AVLNode N) {
         if (N == null)
             return 0;
         return N.height;
     }
-
+    //Find max of the tree
     int max(int a, int b) {
         return (a > b) ? a : b;
     }
 
     AVLNode rightRotate(AVLNode y) {
+        //Single Rotation to correct LL imbalance
         AVLNode x = y.left;
         AVLNode T2 = x.right;
         x.right = y;
@@ -32,6 +35,7 @@ class AVLTree {
     }
 
     AVLNode leftRotate(AVLNode x) {
+        //Single Rotation to correct RR imbalance
         AVLNode y = x.right;
         AVLNode T2 = y.left;
         y.left = x;
@@ -41,24 +45,27 @@ class AVLTree {
         return y;
     }
 
+    //Get the final balance factor
     int getBalance(AVLNode N) {
         if (N == null)
             return 0;
         return height(N.left) - height(N.right);
     }
 
-    AVLNode insert(AVLNode node, int value) {
-        if (node == null)
+    AVLNode insert(AVLNode node, int value) { //Same as BST
+        if (node == null) //Base condition
             return (new AVLNode(value));
-        if (value < node.value)
+        if (value < node.value) //If value less than current node insert left
             node.left = insert(node.left, value);
-        else if (value > node.value)
+        else if (value > node.value) //If value greater than current node insert right
             node.right = insert(node.right, value);
         else
             return node;
 
+        //Balancing Factor
         node.height = 1 + max(height(node.left), height(node.right));
         int balance = getBalance(node);
+        //Condition where balancing factor applied
         if (balance > 1 && value < node.left.value)
             return rightRotate(node);
         if (balance < -1 && value > node.right.value)
@@ -76,39 +83,43 @@ class AVLTree {
 }
 
 class BTreeNode {
-    int[] keys;
+    int[] keys; //Define the key for the B-Tree (Sorta like a dictionary key)
     int t; // Minimum degree (defines the range for number of keys)
-    BTreeNode[] children;
+    BTreeNode[] children; //Array of children in BTree
     int numKeys; // Current number of keys
-    boolean isLeaf;
+    boolean isLeaf; //boolean to check leaf
 
     public BTreeNode(int t, boolean isLeaf) {
+        //Construct the B-Tree node
         this.t = t;
         this.isLeaf = isLeaf;
-        keys = new int[2 * t - 1];
-        children = new BTreeNode[2 * t];
+        keys = new int[2 * t - 1]; //Declare the keys in the tree
+        children = new BTreeNode[2 * t]; //Declare the children
         numKeys = 0;
     }
 }
 
 class BTree {
-    BTreeNode root;
-    int t;
+    BTreeNode root; //Construct the root
+    int t; //Range of the tree
 
-    BTree(int t) {
+    BTree(int t) { //Set the root
         this.t = t;
         root = null;
     }
 
-    void insert(int k) {
-        if (root == null) {
-            root = new BTreeNode(t, true);
+    void insert(int k) { //Insert check if it's full
+        //If it's full, split it, and then call function insert non-full
+        if (root == null) { //Base case, if tree is null
+            root = new BTreeNode(t, true); //Set the root
             root.keys[0] = k;
             root.numKeys = 1;
-        } else {
+        } else { //If other nodes exist besides the root
             if (root.numKeys == 2 * t - 1) {
+                //Recursively call the function to insert
                 BTreeNode s = new BTreeNode(t, false);
                 s.children[0] = root;
+                //If the nodes are full, then split.
                 splitChild(s, 0);
                 int i = 0;
                 if (s.keys[0] < k) i++;
@@ -120,9 +131,11 @@ class BTree {
         }
     }
 
+    //Function for the split child
     void splitChild(BTreeNode x, int i) {
         BTreeNode z = new BTreeNode(t, x.children[i].isLeaf);
         z.numKeys = t - 1;
+        //Loop for each keys in a child
         for (int j = 0; j < t - 1; j++) {
             z.keys[j] = x.children[i].keys[j + t];
         }
@@ -177,8 +190,7 @@ class BTree {
     }
 
     public static void main(String[] args) {
-        BTree bTree = new BTree(3);
-
+        BTree bTree = new BTree(3); //Set the height as 3
         // Insert into BTree
         bTree.insert(10);
         bTree.insert(20);
@@ -190,11 +202,11 @@ class BTree {
         bTree.insert(17);
 
         // Search in BTree
-        BTreeNode foundNode = bTree.search(bTree.root, 6);
+        BTreeNode foundNode = bTree.search(bTree.root, 35);
         if (foundNode != null) {
-            System.out.println("Key 6 found in BTree.");
+            System.out.println("Key 35 found in BTree.");
         } else {
-            System.out.println("Key 6 not found in BTree.");
+            System.out.println("Key 35 not found in BTree.");
         }
     }
 }
