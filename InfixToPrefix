@@ -1,0 +1,99 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class InfixToPrefix {
+    static int precedence(char ch) {
+        switch (ch) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+        }
+        return -1;
+    }
+
+    static boolean isOperator(char ch) {
+        return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
+    }
+
+    static String reverse(String input) {
+        StringBuilder sb = new StringBuilder(input);
+        return sb.reverse().toString();
+    }
+
+    public static String infixToPrefix(String infix) {
+        // Step 1: Reverse the infix expression
+        infix = reverse(infix);
+
+        // Step 2: Replace ( with ) and vice versa
+        char[] charsInInfix = infix.toCharArray();
+        for (int i = 0; i < charsInInfix.length; i++) {
+            if (charsInInfix[i] == '(') {
+                charsInInfix[i] = ')';
+            } else if (charsInInfix[i] == ')') {
+                charsInInfix[i] = '(';
+            }
+        }
+        infix = new String(charsInInfix);
+
+        // Step 3: Convert the modified infix expression to postfix
+        String postfix = infixToPostfix(infix);
+
+        // Step 4: Reverse the postfix expression to get the prefix expression
+        String prefix = reverse(postfix);
+
+        return prefix;
+    }
+
+    public static String infixToPostfix(String infix) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < infix.length(); i++) {
+            char c = infix.charAt(i);
+
+            if (Character.isLetterOrDigit(c)) {
+                result.append(c);
+            }
+            else if (c == '(') {
+                stack.push(c);
+            }
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                stack.pop(); // remove '('
+            }
+            else if (isOperator(c)) {
+                while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in); // Create a scanner object to take user input
+
+        System.out.print("Enter an infix expression: ");
+        String infixExpression = scanner.nextLine(); // Read the infix expression input
+
+        String prefixExpression = infixToPrefix(infixExpression);
+
+        // Output the result
+        System.out.println("Prefix Expression: " + prefixExpression);
+
+        scanner.close(); // Close the scanner
+    }
+}
