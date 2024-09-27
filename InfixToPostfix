@@ -1,0 +1,81 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class InfixToPostfix {
+
+    static int precedence(char ch) {
+        switch (ch) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+        }
+        return -1;
+    }
+
+    // Function to check if character is an operator
+    static boolean isOperator(char ch) {
+        return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
+    }
+
+    // Function to convert infix expression to postfix expression
+    public static String infixToPostfix(String infix) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < infix.length(); i++) {
+            char c = infix.charAt(i);
+
+            // If the character is an operand, add it to output
+            if (Character.isLetterOrDigit(c)) {
+                result.append(c);
+            }
+            // If the character is '(', push it to stack
+            else if (c == '(') {
+                stack.push(c);
+            }
+            // If the character is ')', pop and append from the stack until '(' is encountered
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                stack.pop(); // Pop '(' from stack
+            }
+            // If the character is an operator
+            else if (isOperator(c)) {
+                while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        // Pop all remaining operators from the stack
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.toString();
+    }
+
+    // Main method to take input and call infix to postfix function
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Ask the user for an infix expression
+        System.out.print("Enter an infix expression: ");
+        String infixExpression = scanner.nextLine(); // Read user input
+
+        // Convert the infix expression to postfix
+        String postfixExpression = infixToPostfix(infixExpression);
+
+        // Output the result
+        System.out.println("Postfix Expression: " + postfixExpression);
+
+        scanner.close(); // Close the scanner
+    }
+}
